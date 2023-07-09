@@ -8,3 +8,7 @@ HTML JS SCSS (frontend)
 
 npm i
 npm run dev
+
+# aggregate function
+
+node aggregate.js
