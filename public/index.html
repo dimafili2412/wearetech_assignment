@@ -15,7 +15,7 @@
         <div id="cart-container"></div>
         <div id="checkout-container">
             <div class=""><p id="total-price-counter"></p></div>
-            <button id="checkout-button" disabled>Cehckout</button>
+            <button id="checkout-button" disabled>Checkout</button>
         </div>
         <div id="payment-modal-container" class="hidden">
             <div id="payment-modal">
@@ -30,15 +30,15 @@
                             </div>
                             <div class="form-group">
                                 <label for="card-number">Card Number:</label>
-                                <input type="number" id="card-number" pattern="\d{16}" title="Please enter exactly 16 digits" required />
+                                <input type="text" id="card-number" pattern="\d{16}" title="Please enter exactly 16 digits" required />
                             </div>
                             <div class="form-group">
-                                <label for="expiry-date">Expiry Date:</label>
+                                <label for="expiry-date">Expiration Date:</label>
                                 <input type="month" id="expiry-date" required />
                             </div>
                             <div class="form-group">
                                 <label for="cvv">CVV:</label>
-                                <input type="number" id="cvv" pattern="\d{3}" title="Please enter exactly 3 digits" required />
+                                <input type="text" id="cvv" pattern="\d{3}" title="Please enter exactly 3 digits" required />
                             </div>
                             <button type="submit">Confirm Payment</button>
                         </form>

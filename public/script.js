@@ -114,78 +114,68 @@ checkoutButton.addEventListener('click', togglePaymentModal);
 modalExitButton.addEventListener('click', togglePaymentModal);
 
 //api
-async function fetchProducts() {
+async function handleResponse(response) {
+    if (!response.ok) {
+        throw new Error('Server responded with a status of ' + response.status);
+    }
+    return await response.json();
+}
+
+async function fetchData(endpoint) {
     try {
-        const response = await fetch('/products');
-        if (!response.ok) {
-            throw new Error('Failed to fetch products');
-        }
-        const productsData = await response.json();
-        //map product data with plans as StoreItem instances
-        products = productsData.map((product, productIndex) => ({
-            ...product,
-            plans: product.plans.map((plan, planIndex) => new StoreItem(product.name, plan.name, plan.price, product.img, productIndex, planIndex)),
-        }));
-        renderStore();
+        const response = await fetch(`./${endpoint}`);
+        return await handleResponse(response);
     } catch (error) {
         console.error(error);
     }
+}
+
+async function postData(endpoint, data) {
+    try {
+        const response = await fetch(`./${endpoint}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
+        return await handleResponse(response);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function fetchProducts() {
+    const productsData = (await fetchData('products')) || [];
+    products = productsData.map(function (product, productIndex) {
+        return {
+            ...product,
+            plans: product.plans.map(function (plan, planIndex) {
+                return new StoreItem(product.name, plan.name, plan.price, product.img, productIndex, planIndex);
+            }),
+        };
+    });
+    renderStore();
 }
 
 async function fetchCart() {
-    try {
-        const response = await fetch('/cart');
-        if (!response.ok) {
-            throw new Error('Failed to fetch cart');
-        }
-        const cartData = await response.json();
-        //map cart items to CartItem instances
-        cart = cartData.map((item) => new CartItem(item.title, item.subtitle, item.price, item.img));
-        renderCart();
-    } catch (error) {
-        console.error(error);
-    }
+    const cartData = (await fetchData('cart')) || [];
+    cart = cartData.map(function (item) {
+        return new CartItem(item.title, item.subtitle, item.price, item.img);
+    });
+    renderCart();
 }
 
 async function addProductToCart(productIndex, planIndex) {
-    try {
-        const response = await fetch('/cart/add', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ productIndex, planIndex }),
-        });
-
-        if (response.ok) {
-            fetchCart();
-        } else {
-            console.log('Failed to add product to cart');
-        }
-    } catch (error) {
-        console.error(error);
-    }
+    await postData('cart/add', { productIndex, planIndex });
+    fetchCart();
 }
 
 async function removeProductFromCart(index) {
-    try {
-        const response = await fetch('/cart/remove', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ index }),
-        });
-
-        if (response.ok) {
-            fetchCart();
-        } else {
-            console.log('Failed to remove product from cart');
-        }
-    } catch (error) {
-        console.error(error);
-    }
+    await postData('cart/remove', { index });
+    fetchCart();
 }
 
-//when page loads fetch products and render the store
-window.addEventListener('DOMContentLoaded', fetchProducts);
+//when page loads fetch products and crt and render the store
+window.addEventListener('DOMContentLoaded', async () => {
+    await fetchProducts();
+    await fetchCart();
+});
