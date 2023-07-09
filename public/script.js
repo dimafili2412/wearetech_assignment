@@ -143,6 +143,7 @@ async function postData(endpoint, data) {
     }
 }
 
+//rest functions
 async function fetchProducts() {
     const productsData = (await fetchData('products')) || [];
     products = productsData.map(function (product, productIndex) {
