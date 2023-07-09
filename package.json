@@ -1,0 +1,22 @@
+{
+    "name": "wearetech_assignment",
+    "version": "1.0.0",
+    "description": "Interview assignment :)",
+    "main": "index.js",
+    "scripts": {
+        "dev": "node index.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/dimafili2412/wearetech_assignment.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/dimafili2412/wearetech_assignment/issues"
+    },
+    "homepage": "https://github.com/dimafili2412/wearetech_assignment#readme",
+    "dependencies": {
+        "express": "^4.18.2"
+    }
+}
